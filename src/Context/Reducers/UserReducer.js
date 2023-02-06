@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 const cookie = new Cookies();
 
-export const initialState = {
+export const UserInitialState = {
     user: null,
 }
 
@@ -17,7 +17,7 @@ export const actionTypes = {
 }
 
 
-const reducer = (state, action) => {
+const userReducer = (state, action) => {
     switch (action.type) {
         case actionTypes.LOGIN:
             // console.log(action.payload.email)
@@ -56,4 +56,4 @@ const reducer = (state, action) => {
 
     }
 }
-export default reducer;
+export default userReducer;
