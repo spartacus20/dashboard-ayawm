@@ -14,7 +14,7 @@ function Dashboard() {
 
   return (
     <div className='py-3 px-6'>
-       <Header />
+       <Header /> 
         <h1>Dashboard</h1>
 
 
