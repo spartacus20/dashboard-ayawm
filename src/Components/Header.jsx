@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react'
+import Cookies from 'universal-cookie'
 import { Authentication } from '../Utils/Authentication'
 import { useUserValue } from '../Context/userContext'
 import { actionTypes } from '../Context/Reducers/UserReducer';
 import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
 import { HiBars4 } from 'react-icons/hi2'
+import { AiOutlinePoweroff }  from 'react-icons/ai'
 
 function Header({logOut, toggleSidebar, sidebar}) {
   const [{ user }, dispatch] = useUserValue();
   const [show, setShow] = useState(false)
+
+
+  const handleLogout = () => {
+    const cookies = new Cookies();
+    cookies.remove('jid');
+    window.location.href = "/login"
+  }
 
   const getUserInfo = async () => {
     const response = await Authentication();
@@ -34,15 +43,7 @@ function Header({logOut, toggleSidebar, sidebar}) {
 
 
         </div>
-        <div className='ml-2' onClick={() => setShow(!show)}>
-          {show ? <IoIosArrowUp /> : <IoIosArrowDown />}
-        </div>
-        <div className={show ? "top-16 mt-3 ml-24  absolute h-3 w-3 origin-bottom-left rotate-45 transform bg-slate-500 ":"hidden"}></div>
-        <div className={show ? "h-7 w-52 bg-blue-500 absolute top-20 mt-2 " : "hidden"}>
-            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
-                <li className=" hover:bg-blue-300 hover:text-black text-center">Log out </li>
-            </ul>
-        </div>
+        <AiOutlinePoweroff size={20} className='ml-2 text-red-600' onClick={handleLogout}/>
       </div>
 
     </header>
