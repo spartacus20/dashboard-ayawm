@@ -5,13 +5,13 @@ import { convertToHTML } from 'draft-convert';
 import { stateToHTML} from 'draft-js-export-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-function RichEditor() {
+function  RichEditor() {
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const html = stateToHTML(editorState.getCurrentContent());
 
   return (
-    <div>
+    <div className="bg-white">
       <Editor
         editorState={editorState}
         toolbarClassName="toolbarClassName"
