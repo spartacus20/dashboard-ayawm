@@ -47,7 +47,7 @@ function Products() {
             </div>
 
             <div className='mt-10'>
-                <RichEditor/> 
+                {/* <RichEditor/>  */}
                 <ProductTable products={products} />
             </div>
 

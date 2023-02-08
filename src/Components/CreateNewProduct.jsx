@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import RichEditor from './RichText/RichEditor'
 
 function CreateNewProduct({ productModal, toggleModal }) {
-
     return (
         <>
 
@@ -26,7 +25,7 @@ function CreateNewProduct({ productModal, toggleModal }) {
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Name: </label>
                                     <input type="text" name="name" id="name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  mb-3" required />
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Description: </label>
-                                    <div>
+                                    <div className='bg-white'>
                                         <RichEditor />
                                     </div>
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 mt-2">Price: </label>      
