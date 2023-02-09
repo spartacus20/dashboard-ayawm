@@ -1,18 +1,23 @@
 import React, { useState, useCallback } from 'react'
+import  axios  from '../Services/axios'	
 import RichEditor from './RichText/RichEditor'
 import { useDropzone } from "react-dropzone";
 import { toast } from 'react-toastify';
+import { new_product_url } from '../Utils/constants';
 
 function CreateNewProduct({ productModal, toggleModal }) {
 
     const [imageList, setImageList] = useState([]);
-    const [nImages, setnImages] = useState(0);
+
+
+    //I had to use the imageList dependency in the useCallback hook to update the imageList lenght 
+    //to check if user upload more than 4 images. 
     const onDrop = useCallback((acceptedFiles) => {
 
-        // console.log(acceptedFiles.length)
         console.log(imageList.length)
-        if (imageList.length <= 4) {
-            setnImages((prevState) => prevState + acceptedFiles.length);
+        console.log(acceptedFiles.length + imageList.length)
+        // console.log(nImages)
+        if (imageList.length <= 3 && (acceptedFiles.length + imageList.length) <= 4) {
             acceptedFiles.forEach((file) => {
                 const reader = new FileReader();
                 reader.onload = () => {
@@ -26,11 +31,20 @@ function CreateNewProduct({ productModal, toggleModal }) {
         } else {
             toast.error('You can only upload 4 images')
         }
-    }, []);
+    }, [imageList]);
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: 'image/jpeg, image/png',
     });
+
+    const removeImage = (e, index) => {
+        e.preventDefault();
+        setImageList((prev) => {
+            prev.splice(index, 1);
+            console.log(prev);
+            return [...prev];
+        });
+    };
 
     const onToggleModal = () => {
         toggleModal();
@@ -38,6 +52,16 @@ function CreateNewProduct({ productModal, toggleModal }) {
     }
     const handleSubmit = (e) => {
         e.preventDefault();
+        axios.post( new_product_url , { 
+            
+            ImageList: imageList,
+                            
+        }).then((res) => {
+            console.log(res);
+            
+        }).catch((err) => {
+            console.log(err);
+        })
         console.log(imageList.length)
     }
 
@@ -45,7 +69,7 @@ function CreateNewProduct({ productModal, toggleModal }) {
         <>
 
             <div id="defaultModal" tabIndex="-1" aria-hidden="true" className={productModal ? "flex  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full sm:mt-[150px] xl:mt-[0px]" : "hidden"}>
-                <div className="relative p-4 w-full max-w-2xl h-full md:h-auto overflow-y-scroll">
+                <div className="relative p-4 w-full max-w-2xl xl:h-full md:h-auto ">
                     <div className="relative p-4 bg-[#EDF2F7] rounded-lg shadow-2xl  sm:p-5">
                         <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
                             <h3 className="text-lg font-semibold text-gray-900  ">
@@ -83,8 +107,9 @@ function CreateNewProduct({ productModal, toggleModal }) {
                                     </div>
                                     <div className='mt-4 flex flex-wrap'>
                                         {imageList.map((image, index) => (
-                                            <div key={index} className='w-24 h-24 mr-2 mb-2'>
-                                                <img src={image} alt="" className='rounded-xl w-24 h-24' />
+                                            <div key={index} className=' mt-3 w-24 h-24 mr-2 mb-2 flex flex-col items-center justify-center'>
+                                                <img src={image} alt="" className='rounded-xl w-24 h-24 ' />
+                                                <button className='border-2 border-red-700 rounded-lg mt-2 px-3 hover:bg-red-500 hover:font-semibold' onClick={removeImage}>Delete</button>
                                             </div>
                                         ))}
                                     </div>
