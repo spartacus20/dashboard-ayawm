@@ -38,7 +38,7 @@ function Products() {
 
             <div className='xl:ml-[260px] sm:ml-2 mt-10 flex '>
                 <button className='bg-blue-500 text-white px-2 py-1 rounded font-semibold' onClick={() => toggleModal()}>Create New Product</button>
-                <CreateNewProduct productModal={productModal} toggleModal={toggleModal} />
+                <CreateNewProduct productModal={productModal} toggleModal={toggleModal} fetchProducts={fetchProducts} />
 
                 <div className='border-2 flex items-center w-[100px] border-blue-500 text-blue-500 font-semibold px-2 py-1 rounded  xl:ml-10 sm:ml-4 cursor-pointer ' onClick={fetchProducts}>
                     <IoMdRefresh />
@@ -48,7 +48,7 @@ function Products() {
 
             <div className='mt-10'>
                 {/* <RichEditor/>  */}
-                <ProductTable products={products} />
+                <ProductTable products={products} fetchProduct={fetchProducts} />
             </div>
 
 

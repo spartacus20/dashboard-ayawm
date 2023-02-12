@@ -1,14 +1,24 @@
 import React, { useState, useCallback } from 'react'
-import  axios  from '../Services/axios'	
-import RichEditor from './RichText/RichEditor'
+import axios from '../Services/axios'
+// import RichEditor from './RichText/RichEditor'
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw } from 'draft-js';
+import { convertToHTML } from 'draft-convert';
+import { stateToHTML } from 'draft-js-export-html';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useDropzone } from "react-dropzone";
 import { toast } from 'react-toastify';
-import { new_product_url } from '../Utils/constants';
+import { new_product_url, products_url } from '../Utils/constants';
 
-function CreateNewProduct({ productModal, toggleModal }) {
+function CreateNewProduct({ productModal, toggleModal, fetchProducts }) {
 
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const html = stateToHTML(editorState.getCurrentContent());
+    const [id, setId] = useState('')
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
+    const [price, setPrice] = useState('')
     const [imageList, setImageList] = useState([]);
-
 
     //I had to use the imageList dependency in the useCallback hook to update the imageList lenght 
     //to check if user upload more than 4 images. 
@@ -48,21 +58,41 @@ function CreateNewProduct({ productModal, toggleModal }) {
 
     const onToggleModal = () => {
         toggleModal();
+        setId('');
+        setName('');
+        setPrice('');
+        setDescription('');
+        setEditorState(EditorState.createEmpty());
         setImageList([]);
+        const iName = document.getElementById("name");
+
+        iName.value = "";
+
     }
+
+
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post( new_product_url , { 
-            
-            ImageList: imageList,
-                            
+        // console.log(imageList[0])
+        axios.post(new_product_url, {
+            id,
+            name,
+            description,
+            price,
+            imageList,
         }).then((res) => {
-            console.log(res);
+            
+            toast.success('Product Created Successfully')
+            console.log(res)
+            fetchProducts();
+            toggleModal();
             
         }).catch((err) => {
-            console.log(err);
+            console.log(err)
         })
-        console.log(imageList.length)
+
     }
 
     return (
@@ -84,15 +114,27 @@ function CreateNewProduct({ productModal, toggleModal }) {
                             <div className="flex w-full mb-5">
                                 <div className='w-full'>
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Product ID: </label>
-                                    <input type="text" name="name" id="name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-50 p-2.5 mb-3" required />
+                                    <input type="text" name="id" value={id} className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-50 p-2.5 mb-3" required onChange={(e) => setId(e.target.value)} />
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Name: </label>
-                                    <input type="text" name="name" id="name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  mb-3" required />
+                                    <input type="text" name="name" id="name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  mb-3" required onChange={(e) => setName(e.target.value)} />
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Description: </label>
-                                    <div>
-                                        <RichEditor />
+
+                                    <div className="bg-white">
+                                        <Editor
+                                            editorState={editorState}
+                                            toolbarClassName="toolbarClassName"
+                                            wrapperClassName="wrapperClassName"
+                                            editorClassName="editorClassName"
+                                            onEditorStateChange={(newEditorState) => {
+                                                setEditorState(newEditorState);
+                                                setDescription(html)
+                                            }}
+                                        />
                                     </div>
+
+
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 mt-2">Price: </label>
-                                    <input type="text" name="name" id="name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-50 p-2.5 mb-3" required />
+                                    <input type="number" step={0.01} name="price" value={price} id="price" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-50 p-2.5 mb-3" required onChange={(e) => setPrice(e.target.value)} />
                                     <label htmlFor="name" className="block mb-5 text-sm font-medium text-gray-900 ">Images: </label>
                                     <div className='h-24 outline-gray-300 outline-dotted px-5 flex flex-col items-center justify-center bg-orange-200 rounded-lg'   {...getRootProps()}>
                                         <input {...getInputProps()} />
