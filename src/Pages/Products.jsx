@@ -14,7 +14,8 @@ import RichEditor from '../Components/RichText/RichEditor'
 
 function Products() {
     const { user } = useUserValue()
-    const [productModal, setProductModal] = useState(false)
+
+    const [productModal, setProductModal] = useState(false); 
     const toggleModal = () => { setProductModal(!productModal) }
 
     const [{ products }, dispatch] = useProductValue()

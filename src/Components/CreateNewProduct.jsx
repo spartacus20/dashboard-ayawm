@@ -87,7 +87,14 @@ function CreateNewProduct({ productModal, toggleModal, fetchProducts }) {
             toast.success('Product Created Successfully')
             console.log(res)
             fetchProducts();
+            setId('');
+            setName('');
+            setPrice('');
+            setDescription('');
+            setEditorState(EditorState.createEmpty());
+            setImageList([]);
             toggleModal();
+          
             
         }).catch((err) => {
             console.log(err)
@@ -119,7 +126,7 @@ function CreateNewProduct({ productModal, toggleModal, fetchProducts }) {
                                     <input type="text" name="name" id="name" className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  mb-3" required onChange={(e) => setName(e.target.value)} />
                                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">Description: </label>
 
-                                    <div className="bg-white">
+                                    <div className="bg-white px-2 min-h-[300px]">
                                         <Editor
                                             editorState={editorState}
                                             toolbarClassName="toolbarClassName"

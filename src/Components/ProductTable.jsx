@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai'
 import axios from '../Services/axios'
 import { delete_product_url } from '../Utils/constants'
@@ -31,14 +32,8 @@ function ProductTable({ products, fetchProduct }) {
     const handleEdit = (id) => {
         console.log(id)
         toggleModal();
-
     }
 
-
-    // console.log(JSON.parse(products[0].images))   
-    // let img = JSON.parse(products[0].images); 
-
-    //  console.log(img[0].url)
     return (
         <>
             <div className='xl:ml-[255px] sm:hidden xl:flex'>
@@ -68,8 +63,10 @@ function ProductTable({ products, fetchProduct }) {
                                     </div>
                                     {openRowId === product.id && (
                                         <div className='bg-[#EDF2F7]  w-[100px] p-3 rounded-lg shadow-lg mt-1 absolute'>
-                                            <div className='mb-2 hover:font-bold cursor-pointer' onClick={handleEdit}>Edit</div>
-                                            <EditProduct productID={product.id} fetchProducts={fetchProduct} productModal={productModal} toggleModal={toggleModal}/>
+                                            <Link to={"/product/edit/"+product.id}>
+                                                <div className='mb-2 hover:font-bold cursor-pointer' onClick={handleEdit}>Edit</div>
+                                            </Link>
+
                                             <div className='hover:font-bold cursor-pointer' onClick={() => handleDelete(product.id)}>Delete</div>
                                         </div>
                                     )}
